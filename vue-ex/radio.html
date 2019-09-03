@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <label for="male">
+      <input type="radio" id="male" value="male" v-model="gender" checked>男
+    </label>
+    <label for="female">
+      <input type="radio" id="female" value="female" v-model="gender">女
+    </label>
+    <span>
+      gender:{{gender}}
+    </span>
+  </div>
+</body>
+<script>
+  const app = new Vue({
+    el:'#app',
+    data:{
+      msg:'你好',
+      // 根据value设置默认选中
+      gender:"male"
+    }
+  })
+</script>
+</html>
