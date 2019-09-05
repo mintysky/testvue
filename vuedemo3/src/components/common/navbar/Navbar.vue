@@ -8,15 +8,17 @@
 </template>
 <script>
 export default {
-  name:"Navbar"
+  name:"NavBar"
   
 }
 </script>
-<style lang="scss" scoped>
+<style>
 .nav-bar{
   display: flex;
   line-height: 44px;
-    .left, .right{
+   
+}
+ .left, .right{
       width: 60px;
       background:pink;
     }
@@ -24,6 +26,4 @@ export default {
       flex: 1;
       background:#ff5;
     }
-}
-
 </style>

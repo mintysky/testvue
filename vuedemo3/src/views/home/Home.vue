@@ -1,6 +1,6 @@
 <template>
   <div id="home" class="wrapper">
-    <!-- <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar> -->
+    <nav-bar class="home-nav"></nav-bar>
    
   </div>
 </template>
@@ -10,7 +10,7 @@
   // import RecommendView from './childComps/RecommendView'
   // import FeatureView from './childComps/FeatureView'
 
-  // import Navbar from 'components/common/navbar/Navbar.vue'
+   import NavBar from 'components/common/navbar/NavBar'
   // import TabControl from 'components/content/tabControl/TabControl'
   // import GoodList from 'components/content/goods/GoodsList'
   // import Scroll from 'components/common/scroll/Scroll'
@@ -24,7 +24,7 @@
       // HomeSwiper,
       // RecommendView,
       // FeatureView,
-      //  Navbar,
+       NavBar,
       // TabControl,
       // GoodList,
       // Scroll,
