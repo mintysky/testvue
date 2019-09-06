@@ -1,9 +1,8 @@
 <template>
   <div class="nav-bar">
     <div class="left"><slot name="left"></slot></div>
-    <div class="center"><slot name="center"></slot></div>
+    <div class="center"><slot name="center">1111</slot></div>
     <div class="right"><slot name="left"></slot></div>
-    
   </div>
 </template>
 <script>
@@ -20,10 +19,9 @@ export default {
 }
  .left, .right{
       width: 60px;
-      background:pink;
     }
     .center{
       flex: 1;
-      background:#ff5;
+      text-align: center;
     }
 </style>
