@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./lib/vue.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <label for="all">
+      <input type="checkbox" name="" id="all" v-model="checked" @click="checkAll">{{checked}}
+    </label>
+    <hr>
+    <div class="box">
+      <label :for="item" v-for="(item,i) in cartlist" :key="i">
+        <input type="checkbox" @change="checkItem" :id="item" :value="item" v-model="checkdata" ref="checks">{{item}}
+      </label>
+      <hr>
+      <p>{{checkdata}}</p>
+    </div>
+
+  </div>
+</body>
+<script>
+  const vm = new Vue({
+    el: "#app",
+    data: {
+      cartlist: ['apple', 'pear', 'banana', 'watermelon', 'lemon', 'orange'],
+      checkdata: [],
+      checked: true, //全选框
+    },
+    created() {
+      this.checkdata = this.cartlist
+    },
+    computed: {
+      isSelectAll() {
+        if (this.checkdata.length === 0) return false
+        return !this.checkdata.find(item => !item.checked)
+      }
+    },
+    watch() {
+
+    },
+    methods: {
+      checkAll() {
+        if (this.checkdata.length == this.cartlist.length) {
+          //全部选中
+          this.checkdata =[]
+        } else { //部分未选中
+          this.checkdata = this.cartlist
+        }
+      },
+      checkItem() {
+        if (this.checkdata.length == this.cartlist.length) {
+          this.checked = true
+        } else {
+          this.checked = false
+        }
+      }
+    }
+  })
+</script>
+
+</html>
