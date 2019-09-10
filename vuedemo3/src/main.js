@@ -16,6 +16,8 @@ Vue.use(VueAxios, axios)
 axios.defaults.baseURL = 'http://123.207.32.32:8000/api/v1';
 
 Vue.config.productionTip = false
+
+
 // Create a cookie, valid across the entire site:
 Cookies.set('name', 'value');
 

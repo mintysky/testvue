@@ -1,9 +1,8 @@
 <template>
   <div class="goods">
-    <goods-list-item v-for = "item in goods" :key="item.id" :goodsItem = "item">
+    <goods-list-item v-for = "item in goods" :key="item.id" :goodsItem = "item" class="goods-items">
 
     </goods-list-item>
-    {{goods}}
   </div>
 </template>
 <script>
@@ -24,4 +23,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.goods{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:center;
+  .goods-items{
+    width: 49%;
+    padding: 2px;
+  }
+}
 </style>

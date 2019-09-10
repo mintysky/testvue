@@ -1,64 +1,16 @@
 <template>
-  <div id="home" class="wrapper">
+  <div id="home">
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <home-swiper :banner="banner"></home-swiper>
-    <recommend-view :recommend="recommend"></recommend-view>
-    <Feature></Feature>
-    <tab-control :titles="titles" class="tab-control"></tab-control>
-
-    <good-list :goods = "goods['pop'].list"></good-list>
-    <ul>
-      <li>列表1个</li>
-      <li>列表2个</li>
-      <li>列表3个</li>
-      <li>列表4个</li>
-      <li>列表5个</li>
-      <li>列表6个</li>
-      <li>列表7个</li>
-      <li>列表8个</li>
-      <li>列表9个</li>
-      <li>列表10个</li>
-      <li>列表11个</li>
-      <li>列表12个</li>
-      <li>列表13个</li>
-      <li>列表14个</li>
-      <li>列表15个</li>
-      <li>列表16个</li>
-      <li>列表17个</li>
-      <li>列表18个</li>
-      <li>列表19个</li>
-      <li>列表20个</li>
-      <li>列表21个</li>
-      <li>列表22个</li>
-      <li>列表23个</li>
-      <li>列表24个</li>
-      <li>列表25个</li>
-      <li>列表26个</li>
-      <li>列表27个</li>
-      <li>列表28个</li>
-      <li>列表29个</li>
-      <li>列表30个</li>
-      <li>列表31个</li>
-      <li>列表32个</li>
-      <li>列表33个</li>
-      <li>列表34个</li>
-      <li>列表35个</li>
-      <li>列表36个</li>
-      <li>列表37个</li>
-      <li>列表38个</li>
-      <li>列表39个</li>
-      <li>列表40个</li>
-      <li>列表41个</li>
-      <li>列表42个</li>
-      <li>列表43个</li>
-      <li>列表44个</li>
-      <li>列表45个</li>
-      <li>列表46个</li>
-      <li>列表47个</li>
-      <li>列表48个</li>
-    </ul>
+    <scroll class="home-content" ref="scroll">
+      <home-swiper :banner="banner"></home-swiper>
+      <recommend-view :recommend="recommend"></recommend-view>
+      <Feature></Feature>
+      <tab-control :titles="titles" class="tab-control" @tabClick="tabClick"></tab-control>
+      <good-list :goods="showGoods"></good-list>
+    </scroll>
+    <back-top @click.native = "backTop"></back-top>
   </div>
 </template>
 
@@ -69,9 +21,10 @@ import Feature from "./childComps/Feature";
 
 import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabcontrol/TabControl";
-import GoodList from 'components/content/goods/GoodsList'
-// import Scroll from 'components/common/scroll/Scroll'
-// import BackTop from 'components/content/backTop/BackTop'
+import GoodList from "components/content/goods/GoodsList";
+
+import Scroll from "components/common/scroll/Scroll";
+import BackTop from 'components/content/backtop/BackTop'
 
 export default {
   name: "Home",
@@ -93,7 +46,8 @@ export default {
           page: 0,
           list: []
         }
-      }
+      },
+      currentType: "pop"
     };
   },
   components: {
@@ -104,16 +58,40 @@ export default {
 
     TabControl,
     GoodList,
-    // Scroll,
-    // BackTop
+    Scroll,
+    BackTop
   },
   created() {
     this.getHomedata();
-    this.getHomeGoods('pop');
-    this.getHomeGoods('new');
-    this.getHomeGoods('sell');
+    this.getHomeGoods("pop");
+    this.getHomeGoods("new");
+    this.getHomeGoods("sell");
+  },
+  computed: {
+    // 计算属性
+    showGoods() {
+      return this.goods[this.currentType].list;
+    }
   },
   methods: {
+    // 事件监听
+    tabClick(index) {
+      switch (index) {
+        case 0:
+          this.currentType = "pop";
+          break;
+        case 1:
+          this.currentType = "new";
+          break;
+        case 2:
+          this.currentType = "sell";
+          break;
+      }
+    },
+      backTop(){
+        this.$refs.scroll.scrollTo(0,0)
+    },
+    // 网络请求
     getHomedata() {
       this.axios.get("/home/multidata").then(res => {
         this.banner = res.data.data.banner.list;
@@ -121,13 +99,12 @@ export default {
       });
     },
     getHomeGoods(type) {
-      const page = this.goods[type].page+1
+      const page = this.goods[type].page + 1;
       this.axios
         .get("/home/data", { params: { type: type, page: page } })
         .then(res => {
           this.goods[type].list.push(...res.data.data.list);
-          console.log(this.goods.pop.list)
-          this.goods[type].page += 1
+          this.goods[type].page += 1;
         });
     }
   }
@@ -152,24 +129,19 @@ export default {
 }
 
 .tab-control {
+  position: -webkit-sticky;
   position: sticky;
   top: 44px;
+  left: 0;
   z-index: 9;
 }
 
-.content {
-  overflow: hidden;
-
+.home-content {
   position: absolute;
   top: 44px;
   bottom: 49px;
   left: 0;
   right: 0;
+  overflow: hidden;
 }
-
-/*.content {*/
-/*height: calc(100% - 93px);*/
-/*overflow: hidden;*/
-/*margin-top: 44px;*/
-/*}*/
 </style>
