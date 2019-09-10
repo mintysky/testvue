@@ -7,6 +7,8 @@
     <recommend-view :recommend="recommend"></recommend-view>
     <Feature></Feature>
     <tab-control :titles="titles" class="tab-control"></tab-control>
+
+    <good-list :goods = "goods['pop'].list"></good-list>
     <ul>
       <li>列表1个</li>
       <li>列表2个</li>
@@ -67,7 +69,7 @@ import Feature from "./childComps/Feature";
 
 import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabcontrol/TabControl";
-// import GoodList from 'components/content/goods/GoodsList'
+import GoodList from 'components/content/goods/GoodsList'
 // import Scroll from 'components/common/scroll/Scroll'
 // import BackTop from 'components/content/backTop/BackTop'
 
@@ -100,14 +102,16 @@ export default {
     RecommendView,
     Feature,
 
-    TabControl
-    // GoodList,
+    TabControl,
+    GoodList,
     // Scroll,
     // BackTop
   },
   created() {
     this.getHomedata();
-    this.getHomeGoods();
+    this.getHomeGoods('pop');
+    this.getHomeGoods('new');
+    this.getHomeGoods('sell');
   },
   methods: {
     getHomedata() {
@@ -116,21 +120,14 @@ export default {
         this.recommend = res.data.data.recommend.list;
       });
     },
-    getHomeGoods() {
+    getHomeGoods(type) {
+      const page = this.goods[type].page+1
       this.axios
-        .get("/home/data", { params: { type: "new", page: 1 } })
+        .get("/home/data", { params: { type: type, page: page } })
         .then(res => {
-          this.goods.new.list = res.data.data.list;
-        });
-      this.axios
-        .get("/home/data", { params: { type: "pop", page: 1 } })
-        .then(res => {
-          this.goods.pop.list = res.data.data.list;
-        });
-      this.axios
-        .get("/home/data", { params: { type: "sell", page: 1 } })
-        .then(res => {
-          this.goods.sell.list = res.data.data.list;
+          this.goods[type].list.push(...res.data.data.list);
+          console.log(this.goods.pop.list)
+          this.goods[type].page += 1
         });
     }
   }
