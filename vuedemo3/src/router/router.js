@@ -3,8 +3,8 @@ import Router from 'vue-router'
 
 const Home = () => import('../views/home/Home')
 const Category = () => import('../views/category/Category')
-// const Cart = () => import('../views/cart/Cart')
-// const Profile = () => import('../views/profile/Profile')
+const Cart = () => import('../views/cart/Cart')
+const Profile = () => import('../views/profile/Profile')
 
 
 
@@ -22,14 +22,14 @@ var routes = [
     path: '/category',
     component: Category
   },
-  // {
-  //   path: '/cart',
-  //   component: Cart
-  // },
-  // {
-  //   path: '/profile',
-  //   component: Profile
-  // }
+  {
+    path: '/cart',
+    component: Cart
+  },
+  {
+    path: '/profile',
+    component: Profile
+  }
 ]
 
 export default new Router({

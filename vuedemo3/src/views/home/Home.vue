@@ -3,14 +3,17 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="home-content" ref="scroll">
+    <scroll class="home-content" ref="scroll" 
+    :probe-type="3" :pull-up-load ="true"
+    @scroll="contentScroll" @pullingUp="loadMore" >
+  
       <home-swiper :banner="banner"></home-swiper>
       <recommend-view :recommend="recommend"></recommend-view>
       <Feature></Feature>
       <tab-control :titles="titles" class="tab-control" @tabClick="tabClick"></tab-control>
       <good-list :goods="showGoods"></good-list>
     </scroll>
-    <back-top @click.native = "backTop"></back-top>
+    <back-top @click.native="backTop" v-show="isBack"></back-top>
   </div>
 </template>
 
@@ -24,7 +27,7 @@ import TabControl from "components/content/tabcontrol/TabControl";
 import GoodList from "components/content/goods/GoodsList";
 
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from 'components/content/backtop/BackTop'
+import BackTop from "components/content/backtop/BackTop";
 
 export default {
   name: "Home",
@@ -47,7 +50,8 @@ export default {
           list: []
         }
       },
-      currentType: "pop"
+      currentType: "pop",
+      isBack: false
     };
   },
   components: {
@@ -55,7 +59,6 @@ export default {
     HomeSwiper,
     RecommendView,
     Feature,
-
     TabControl,
     GoodList,
     Scroll,
@@ -88,8 +91,20 @@ export default {
           break;
       }
     },
-      backTop(){
-        this.$refs.scroll.scrollTo(0,0)
+    backTop() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    contentScroll(position) {
+      let y = Math.abs(position.y);
+      // console.log(y);
+      if (y > 300) {
+        this.isBack = true;
+      } else {
+        this.isBack = false;
+      }
+    },
+    loadMore(){
+      this.getHomeGoods(this.currentType)
     },
     // 网络请求
     getHomedata() {
@@ -105,6 +120,7 @@ export default {
         .then(res => {
           this.goods[type].list.push(...res.data.data.list);
           this.goods[type].page += 1;
+          this.$refs.scroll.finishPullUp()
         });
     }
   }

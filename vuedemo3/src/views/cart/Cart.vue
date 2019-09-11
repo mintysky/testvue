@@ -1,22 +1,12 @@
 <template>
   <div>
-    <h2>category</h2>
+    <h2>cart</h2>
   </div>
 </template>
 <script>
-
-
 export default {
-  name: "Category",
-  data() {
-    return {
-      
-    };
-  },
-  mounted() {
-   
-  }
-};
+  name:'Cart',
+}
 </script>
 <style lang="scss" scoped>
 
