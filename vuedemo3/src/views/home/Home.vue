@@ -7,14 +7,14 @@
       class="home-content"
       ref="scroll"
       :probe-type="3"
-      :pullUpLoad="true"
+      :pull-up-load="true"
       @scroll="contentScroll"
       @pullingUp="loadMore"
     >
-      <home-swiper :banner="banner"></home-swiper>
+      <home-swiper :banner="banner" @swiperImgLoad ="swiperLoad"></home-swiper>
       <recommend-view :recommend="recommend"></recommend-view>
       <Feature></Feature>
-      <tab-control :titles="titles" class="tab-control" @tabClick="tabClick"></tab-control>
+      <tab-control :titles="titles" :class="{ fixed: isTabFixed }" ref="tabcontrol" class="tab-control" @tabClick="tabClick"></tab-control>
       <good-list :goods="showGoods"></good-list>
     </scroll>
     <back-top @click.native="backTop" v-show="isBack"></back-top>
@@ -32,6 +32,9 @@ import GoodList from "components/content/goods/GoodsList";
 
 import Scroll from "components/common/scroll/Scroll";
 import BackTop from "components/content/backtop/BackTop";
+import { clearTimeout, setTimeout } from "timers";
+
+import { debounce } from "common/utils";
 
 export default {
   name: "Home",
@@ -55,7 +58,9 @@ export default {
         }
       },
       currentType: "pop",
-      isBack: false
+      isBack: false,
+      tabOffsetTop: 0,
+      isTabFixed:false
     };
   },
   components: {
@@ -73,11 +78,15 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+  },
+  mounted() {
     // 监听item图片加载
+    const refresh = debounce(this.$refs.scroll.refresh, 200);
     this.$bus.$on("itemImgLoad", () => {
-      this.$refs.scroll.refresh();
-      console.log('11111');
+      refresh();
     });
+    
+    
   },
   computed: {
     // 计算属性
@@ -86,7 +95,12 @@ export default {
     }
   },
   methods: {
-    // 事件监听
+    // 事件监听\
+    // 吸顶
+    swiperLoad(){
+      this.tabOffsetTop = this.$refs.tabcontrol.$el.offsetTop;
+      console.log(this.$refs.tabcontrol.$el.offsetTop);
+    },
     tabClick(index) {
       switch (index) {
         case 0:
@@ -105,8 +119,11 @@ export default {
     },
     contentScroll(position) {
       let y = -position.y;
-      // console.log(y);
+      //1 判断backtop是否显示
       this.isBack = y > 500;
+      // 2决定tabcontrol是否吸顶
+      this.isTabFixed = y > this.tabOffsetTop 
+
     },
     loadMore() {
       this.getHomeGoods(this.currentType);
@@ -126,7 +143,6 @@ export default {
         .then(res => {
           this.goods[type].list.push(...res.data.data.list);
           this.goods[type].page += 1;
-
           this.$refs.scroll.finishPullUp();
         });
     }
@@ -150,15 +166,12 @@ export default {
   top: 0;
   z-index: 9;
 }
-
-.tab-control {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 44px;
+.fixed{
+  position: fixed;
+  top:44px;
   left: 0;
-  z-index: 9;
+  right: 0;
 }
-
 .home-content {
   position: absolute;
   top: 44px;

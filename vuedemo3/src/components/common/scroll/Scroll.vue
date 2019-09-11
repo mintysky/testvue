@@ -38,27 +38,33 @@ export default {
       });
       console.log(this.scroll);
       //  监听滚动位置
-      this.scroll.on("scroll", position => {
-        this.$emit("scroll", position);
-      });
+      if (this.probeType === 2 || this.probeType === 3) {
+        this.scroll.on("scroll", position => {
+          this.$emit("scroll", position);
+        });
+      }
+
       // 监听上拉事件
-      this.scroll.on('pullingUp', () => {
-        console.log('上拉更多');
-        this.$emit("pullingUp");
-      });
+      if (this.pullUpLoad) {
+        this.scroll.on("pullingUp", () => {
+          console.log("上拉更多");
+          this.$emit("pullingUp");
+        });
+      }
+
       // }
     });
-  
   },
   methods: {
     scrollTo(x, y, time = 300) {
-      this.scroll.scrollTo(x, y, time);
+      this.scroll && this.scroll.scrollTo(x, y, time);
     },
-    finishPullUp(){
-      this.scroll.finishPullUp()
+    finishPullUp() {
+      this.scroll.finishPullUp();
     },
-    refresh(){
-      this.scroll.refresh()
+    refresh() {
+      this.scroll && this.scroll.refresh();
+      console.log("11111");
     }
   }
 };
