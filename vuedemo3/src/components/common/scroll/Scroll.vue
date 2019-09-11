@@ -36,14 +36,13 @@ export default {
         hasVerticalScroll: true
         // scrollbar:true
       });
-
-      // this.scroll.refresh()
+      console.log(this.scroll);
       //  监听滚动位置
       this.scroll.on("scroll", position => {
         this.$emit("scroll", position);
       });
       // 监听上拉事件
-      this.scroll.on("pullingUp", () => {
+      this.scroll.on('pullingUp', () => {
         console.log('上拉更多');
         this.$emit("pullingUp");
       });
@@ -57,6 +56,9 @@ export default {
     },
     finishPullUp(){
       this.scroll.finishPullUp()
+    },
+    refresh(){
+      this.scroll.refresh()
     }
   }
 };

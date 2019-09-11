@@ -13,6 +13,8 @@ axios.defaults.baseURL = 'http://123.207.32.32:8000/api/v1';
 
 Vue.config.productionTip = false
 
+Vue.prototype.$bus = new Vue()
+
 new Vue({
   router,
   store,

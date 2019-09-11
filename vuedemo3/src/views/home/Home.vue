@@ -3,10 +3,14 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="home-content" ref="scroll" 
-    :probe-type="3" :pull-up-load ="true"
-    @scroll="contentScroll" @pullingUp="loadMore" >
-  
+    <scroll
+      class="home-content"
+      ref="scroll"
+      :probe-type="3"
+      :pullUpLoad="true"
+      @scroll="contentScroll"
+      @pullingUp="loadMore"
+    >
       <home-swiper :banner="banner"></home-swiper>
       <recommend-view :recommend="recommend"></recommend-view>
       <Feature></Feature>
@@ -69,6 +73,11 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+    // 监听item图片加载
+    this.$bus.$on("itemImgLoad", () => {
+      this.$refs.scroll.refresh();
+      console.log('11111');
+    });
   },
   computed: {
     // 计算属性
@@ -92,19 +101,16 @@ export default {
       }
     },
     backTop() {
-      this.$refs.scroll.scrollTo(0, 0);
+      this.$refs.scroll.scrollTo(0, 0, 500);
     },
     contentScroll(position) {
-      let y = Math.abs(position.y);
+      let y = -position.y;
       // console.log(y);
-      if (y > 300) {
-        this.isBack = true;
-      } else {
-        this.isBack = false;
-      }
+      this.isBack = y > 500;
     },
-    loadMore(){
-      this.getHomeGoods(this.currentType)
+    loadMore() {
+      this.getHomeGoods(this.currentType);
+      this.$refs.scroll.scroll.refresh();
     },
     // 网络请求
     getHomedata() {
@@ -120,7 +126,8 @@ export default {
         .then(res => {
           this.goods[type].list.push(...res.data.data.list);
           this.goods[type].page += 1;
-          this.$refs.scroll.finishPullUp()
+
+          this.$refs.scroll.finishPullUp();
         });
     }
   }
