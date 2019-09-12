@@ -36,7 +36,7 @@ export default {
         hasVerticalScroll: true
         // scrollbar:true
       });
-      console.log(this.scroll);
+      // console.log(this.scroll);
       //  监听滚动位置
       if (this.probeType === 2 || this.probeType === 3) {
         this.scroll.on("scroll", position => {
@@ -64,7 +64,7 @@ export default {
     },
     refresh() {
       this.scroll && this.scroll.refresh();
-      console.log("11111");
+      // console.log("11111");
     }
   }
 };
