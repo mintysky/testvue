@@ -3,6 +3,12 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <tab-control
+      :titles="titles"
+      class="tabfixed" v-show="isTabFixed"
+      ref="tabcontrol1"
+      @tabClick="tabClick"
+    ></tab-control>
     <scroll
       class="home-content"
       ref="scroll"
@@ -11,10 +17,14 @@
       @scroll="contentScroll"
       @pullingUp="loadMore"
     >
-      <home-swiper :banner="banner" @swiperImgLoad ="swiperLoad"></home-swiper>
+      <home-swiper :banner="banner" @swiperImgLoad="swiperLoad"></home-swiper>
       <recommend-view :recommend="recommend"></recommend-view>
       <Feature></Feature>
-      <tab-control :titles="titles" :class="{ fixed: isTabFixed }" ref="tabcontrol" class="tab-control" @tabClick="tabClick"></tab-control>
+      <tab-control
+        :titles="titles"
+        ref="tabcontrol2"
+        @tabClick="tabClick"
+      ></tab-control>
       <good-list :goods="showGoods"></good-list>
     </scroll>
     <back-top @click.native="backTop" v-show="isBack"></back-top>
@@ -35,6 +45,7 @@ import BackTop from "components/content/backtop/BackTop";
 import { clearTimeout, setTimeout } from "timers";
 
 import { debounce } from "common/utils";
+import { close } from "fs";
 
 export default {
   name: "Home",
@@ -60,7 +71,9 @@ export default {
       currentType: "pop",
       isBack: false,
       tabOffsetTop: 0,
-      isTabFixed:false
+      isTabFixed: false,
+      saveY: 0,
+      posY:0
     };
   },
   components: {
@@ -85,8 +98,6 @@ export default {
     this.$bus.$on("itemImgLoad", () => {
       refresh();
     });
-    
-    
   },
   computed: {
     // 计算属性
@@ -94,12 +105,18 @@ export default {
       return this.goods[this.currentType].list;
     }
   },
+  activated(){
+    this.$refs.scroll.scrollTo(0,this.saveY)
+  },
+  deactivated(){
+    this.saveY =  -this.posY;
+    console.log(this.saveY);
+  },
   methods: {
     // 事件监听\
     // 吸顶
-    swiperLoad(){
-      this.tabOffsetTop = this.$refs.tabcontrol.$el.offsetTop;
-      console.log(this.$refs.tabcontrol.$el.offsetTop);
+    swiperLoad() {
+      this.tabOffsetTop = this.$refs.tabcontrol2.$el.offsetTop;
     },
     tabClick(index) {
       switch (index) {
@@ -113,17 +130,18 @@ export default {
           this.currentType = "sell";
           break;
       }
+      this.$refs.tabcontrol1.currentIndex = index;
+      this.$refs.tabcontrol2.currentIndex = index;
     },
     backTop() {
       this.$refs.scroll.scrollTo(0, 0, 500);
     },
     contentScroll(position) {
-      let y = -position.y;
+      this.posY = -position.y;
       //1 判断backtop是否显示
-      this.isBack = y > 500;
+      this.isBack = this.posY > 500;
       // 2决定tabcontrol是否吸顶
-      this.isTabFixed = y > this.tabOffsetTop 
-
+      this.isTabFixed = this.posY > this.tabOffsetTop;
     },
     loadMore() {
       this.getHomeGoods(this.currentType);
@@ -152,7 +170,6 @@ export default {
 
 <style scoped>
 #home {
-  padding-top: 44px;
   height: 100vh;
   position: relative;
 }
@@ -160,17 +177,19 @@ export default {
 .home-nav {
   background-color: var(--color-tint);
   color: #fff;
-  position: fixed;
+  /* 浏览器原生滚动 */
+  /* position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 9;
+  z-index: 9; */
 }
-.fixed{
-  position: fixed;
-  top:44px;
-  left: 0;
-  right: 0;
+.tabfixed {
+  position: relative;
+  z-index: 10;
+}
+.hide {
+  display: none;
 }
 .home-content {
   position: absolute;
