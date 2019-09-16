@@ -32,20 +32,20 @@
 </template>
 
 <script>
-import HomeSwiper from "./childComps/HomeSwiper";
-import RecommendView from "./childComps/RecommendView";
-import Feature from "./childComps/Feature";
+import HomeSwiper from "./childComps/HomeSwiper"
+import RecommendView from "./childComps/RecommendView"
+import Feature from "./childComps/Feature"
 
-import NavBar from "components/common/navbar/NavBar";
-import TabControl from "components/content/tabcontrol/TabControl";
-import GoodList from "components/content/goods/GoodsList";
+import NavBar from "components/common/navbar/NavBar"
+import TabControl from "components/content/tabcontrol/TabControl"
+import GoodList from "components/content/goods/GoodsList"
 
-import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/content/backtop/BackTop";
-import { clearTimeout, setTimeout } from "timers";
+import Scroll from "components/common/scroll/Scroll"
+import BackTop from "components/content/backtop/BackTop"
+// import { clearTimeout, setTimeout } from "timers";
 
-import { debounce } from "common/utils";
-import { close } from "fs";
+import { debounce } from "common/utils"
+// import { close } from "fs";
 
 export default {
   name: "Home",

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="detail-bar">
     <nav-bar class="detail-bar">
       <div slot="left" class="back" @click="backClick">
         <img src="~assets/img/common/back.svg" alt="" />
@@ -54,6 +54,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.detail-bar{
+  position: relative;
+  background-color: #fff;
+  z-index: 10;
+}
 .active {
   color: var(--color-high-text);
 }
