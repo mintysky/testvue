@@ -32,7 +32,7 @@ export default {
     }
   },
   beforeUpdate() {
-      console.log(this.paramInfo);
+      // console.log(this.paramInfo);
   }
 };
 </script>

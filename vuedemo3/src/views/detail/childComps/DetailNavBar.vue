@@ -40,11 +40,9 @@ export default {
   mounted() {},
   watch: {},
   methods: {
-    itemClick(index) {
-      this.currentIndex = index;
-    },
     titleClick(i) {
       this.currentIndex = i;
+      this.$emit('titleClick',i)
     },
     backClick() {
       this.$router.back();

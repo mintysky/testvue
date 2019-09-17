@@ -16,7 +16,7 @@
     <div class="info-detail">
       <p>{{rate.content}}</p>
       <div class="info-other">
-        <span class="date">{{rate.created}}</span>
+        <span class="date">{{rate.created | showDate}}</span>
       </div>
       <div class="info-imgs">
         <img :src="item" v-for="(item,i) in rate.images" :key="i" />
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-// import { formatDate } from "common/utils"
+import { formatDate } from "common/utils"
 export default {
   name: "DetailRate",
   props: {
@@ -36,13 +36,13 @@ export default {
         return {};
       }
     }
+  },
+  filters:{
+    showDate(value){
+      let date = new Date(value*1000);
+      return formatDate(date,"yyyy-MM-dd")
+    }
   }
-  // filters:{
-  //   showDate(value){
-  //     let date = new Date(value*1000);
-  //     return formatDate(date,"yyyy-MM-DD")
-  //   }
-  // }
 };
 </script>
 
@@ -69,5 +69,13 @@ export default {
   padding:10px;
   font-size:14px;
   line-height: 20px;
+}
+.info-imgs{
+  height: 100px;
+  overflow: hidden;
+  img{
+    width: 100px;
+    height: 140px;
+  }
 }
 </style>

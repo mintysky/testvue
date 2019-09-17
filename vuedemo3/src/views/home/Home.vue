@@ -5,7 +5,8 @@
     </nav-bar>
     <tab-control
       :titles="titles"
-      class="tabfixed" v-show="isTabFixed"
+      class="tabfixed"
+      v-show="isTabFixed"
       ref="tabcontrol1"
       @tabClick="tabClick"
     ></tab-control>
@@ -20,11 +21,7 @@
       <home-swiper :banner="banner" @swiperImgLoad="swiperLoad"></home-swiper>
       <recommend-view :recommend="recommend"></recommend-view>
       <Feature></Feature>
-      <tab-control
-        :titles="titles"
-        ref="tabcontrol2"
-        @tabClick="tabClick"
-      ></tab-control>
+      <tab-control :titles="titles" ref="tabcontrol2" @tabClick="tabClick"></tab-control>
       <good-list :goods="showGoods"></good-list>
     </scroll>
     <back-top @click.native="backTop" v-show="isBack"></back-top>
@@ -32,20 +29,21 @@
 </template>
 
 <script>
-import HomeSwiper from "./childComps/HomeSwiper"
-import RecommendView from "./childComps/RecommendView"
-import Feature from "./childComps/Feature"
+import HomeSwiper from "./childComps/HomeSwiper";
+import RecommendView from "./childComps/RecommendView";
+import Feature from "./childComps/Feature";
 
-import NavBar from "components/common/navbar/NavBar"
-import TabControl from "components/content/tabcontrol/TabControl"
-import GoodList from "components/content/goods/GoodsList"
+import NavBar from "components/common/navbar/NavBar";
+import TabControl from "components/content/tabcontrol/TabControl";
+import GoodList from "components/content/goods/GoodsList";
 
-import Scroll from "components/common/scroll/Scroll"
-import BackTop from "components/content/backtop/BackTop"
-// import { clearTimeout, setTimeout } from "timers";
+import Scroll from "components/common/scroll/Scroll";
+import BackTop from "components/content/backtop/BackTop";
+import { clearTimeout, setTimeout } from "timers";
 
-import { debounce } from "common/utils"
+// import { debounce } from "common/utils";
 // import { close } from "fs";
+import { itemListenerMixin } from "common/mixin";
 
 export default {
   name: "Home",
@@ -73,7 +71,7 @@ export default {
       tabOffsetTop: 0,
       isTabFixed: false,
       saveY: 0,
-      posY:0
+      posY: 0
     };
   },
   components: {
@@ -91,27 +89,32 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+    this.tabClick(0);
   },
-  mounted() {
-    // 监听item图片加载
-    const refresh = debounce(this.$refs.scroll.refresh, 200);
-    this.$bus.$on("itemImgLoad", () => {
-      refresh();
-    });
-  },
-  computed: {
+    computed: {
     // 计算属性
     showGoods() {
       return this.goods[this.currentType].list;
     }
   },
-  activated(){
-    this.$refs.scroll.scrollTo(0,this.saveY,0)
-    this.$refs.scroll.refresh()
+  mounted() {
+    // // 监听item图片加载
+    // const refresh = debounce(this.$refs.scroll.refresh, 200);
+    // // 保存全局事件
+    // this.itemListener = () => {
+    //   refresh();
+    // }
+    // this.$bus.$on("itemImgLoad", this.itemListener );
   },
-  deactivated(){
-    this.saveY =  -this.posY;
+  mixins: [itemListenerMixin],
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.saveY, 0);
+    this.$refs.scroll.refresh();
+  },
+  deactivated() {
+    this.saveY = -this.posY;
     // console.log(this.saveY);
+    this.$bus.$off("itemImgLoad", this.itemListener);
   },
   methods: {
     // 事件监听\
@@ -131,8 +134,11 @@ export default {
           this.currentType = "sell";
           break;
       }
-      this.$refs.tabcontrol1.currentIndex = index;
-      this.$refs.tabcontrol2.currentIndex = index;
+      // tabControl的currentIndex保持一致
+      if(this.$refs.tabcontrol1 !== undefined){
+        this.$refs.tabcontrol1.currentIndex = index;
+        this.$refs.tabcontrol2.currentIndex = index;
+      }
     },
     backTop() {
       this.$refs.scroll.scrollTo(0, 0, 500);

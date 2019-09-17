@@ -3,6 +3,10 @@ import App from './App.vue'
 import router from './router/router.js'
 import store from './store/store.js'
 import './registerServiceWorker'
+import LazyLoad from "vue-lazyload"
+Vue.use(LazyLoad,{
+  loading:require('assets/img/common/placeholder.png')
+})
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'

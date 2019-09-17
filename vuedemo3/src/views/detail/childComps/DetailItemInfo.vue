@@ -39,7 +39,9 @@ export default {
     };
   },
   methods: {
-    imgLoad() {}
+    imgLoad() {
+      this.$emit("detailImgLoad")
+    }
   }
 };
 </script>

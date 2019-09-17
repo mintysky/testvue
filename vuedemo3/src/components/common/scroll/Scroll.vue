@@ -28,7 +28,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       let wrapper = this.$refs.wrapper;
-      // if (!this.scroll) {
       this.scroll = new BScroll(wrapper, {
         pullUpLoad: this.pullUpLoad,
         probeType: this.probeType,
@@ -36,6 +35,7 @@ export default {
         hasVerticalScroll: true
         // scrollbar:true
       });
+
       // console.log(this.scroll);
       //  监听滚动位置
       if (this.probeType === 2 || this.probeType === 3) {
@@ -51,16 +51,18 @@ export default {
           this.$emit("pullingUp");
         });
       }
-
-      // }
     });
+  },
+  updated() {
+    //重新计算高度
+    this.scroll.refresh();
   },
   methods: {
     scrollTo(x, y, time = 300) {
       this.scroll && this.scroll.scrollTo(x, y, time);
     },
     finishPullUp() {
-      this.scroll.finishPullUp();
+      this.scroll && this.scroll.finishPullUp();
     },
     refresh() {
       this.scroll && this.scroll.refresh();
