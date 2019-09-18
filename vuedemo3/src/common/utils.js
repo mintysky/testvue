@@ -1,4 +1,4 @@
-// 防抖和节流
+// 防抖 减少请求或者dom动态计算次数
 export function debounce(func,delay) {
   let timer = null;
   return function (...args) {
@@ -9,6 +9,8 @@ export function debounce(func,delay) {
   }
 }
 
+// 时间格式化
+// date：标准时间
 export function formatDate(date, fmt) {
   // 获取年份 fmt中有1个或多个Y的情况下
   // y+ 1个或多个

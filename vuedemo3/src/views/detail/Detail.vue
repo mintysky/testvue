@@ -1,7 +1,8 @@
 <template>
   <div id="detail" class="detail">
-    <detail-nav-bar @titleClick="titleClick"></detail-nav-bar>
-    <Scroll class="detail-content" ref="scroll">
+    <detail-nav-bar @titleClick="titleClick" ref="nav"></detail-nav-bar>
+    <Scroll class="detail-content" ref="scroll" :probe-type="3"
+    @scroll="detailScroll">
       <detail-swiper :top-img="topImg"></detail-swiper>
       <detail-base-info :goods="goodsInfo"></detail-base-info>
       <detail-shop-info :shop="shopInfo"></detail-shop-info>
@@ -10,6 +11,9 @@
       <detail-rate ref="rate" :rate="rate"></detail-rate>
       <goods-list ref="recommend" :goods="recommend"></goods-list>
     </Scroll>
+    <detail-bottom-bar>
+
+    </detail-bottom-bar>
   </div>
 </template>
 
@@ -21,6 +25,7 @@ import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailItemInfo from "./childComps/DetailItemInfo";
 import DetailParams from "./childComps/DetailParams";
 import DetailRate from "./childComps/DetailRate";
+import DetailBottomBar from "./childComps/DetailBottomBar"
 
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
@@ -51,7 +56,8 @@ export default {
       rate: {},
       recommend: [],
       topY: [],
-      getTopY: null
+      getTopY: null,
+      currentIndex:0
     };
   },
   components: {
@@ -63,7 +69,8 @@ export default {
     DetailParams,
     DetailRate,
     GoodsList,
-    Scroll
+    Scroll,
+    DetailBottomBar
   },
    mixins: [itemListenerMixin],
   created() {
@@ -79,6 +86,7 @@ export default {
       this.topY.push(this.$refs.params.$el.offsetTop);
       this.topY.push(this.$refs.rate.$el.offsetTop);
       this.topY.push(this.$refs.recommend.$el.offsetTop);
+      this.topY.push(Number.MAX_VALUE);
       console.log(this.topY);
     },100);
   },
@@ -90,6 +98,19 @@ export default {
     this.$bus.$off("itemImgLoad", this.itemListener);
   },
   methods: {
+    detailScroll(position){
+      // console.log(position);
+      const posY = -position.y;
+      const l = this.topY.length - 1;
+      for( let i =0; i<l;i++ ){
+        if(this.currentIndex !== i && (posY >=this.topY [i] && posY < this.topY[i+1])){
+            console.log(i);
+            this.currentIndex = i;
+            this.$refs.nav.currentIndex = this.currentIndex;
+        }
+      }
+
+    },
     titleClick(index) {
       // console.log(index);
       let y = -this.topY[index];
@@ -140,7 +161,7 @@ export default {
 }
 .detail-content {
   background-color: #fff;
-  height: calc(100vh - 44px);
+  height: calc(100vh - 102px);
   position: absolute;
   left: 0;
   right: 0;

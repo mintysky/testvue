@@ -38,7 +38,7 @@ import TabControl from "components/content/tabcontrol/TabControl";
 import GoodList from "components/content/goods/GoodsList";
 
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/content/backtop/BackTop";
+
 import { clearTimeout, setTimeout } from "timers";
 
 // import { debounce } from "common/utils";
@@ -67,7 +67,6 @@ export default {
         }
       },
       currentType: "pop",
-      isBack: false,
       tabOffsetTop: 0,
       isTabFixed: false,
       saveY: 0,
@@ -81,8 +80,7 @@ export default {
     Feature,
     TabControl,
     GoodList,
-    Scroll,
-    BackTop
+    Scroll
   },
   created() {
     this.getHomedata();
@@ -140,15 +138,12 @@ export default {
         this.$refs.tabcontrol2.currentIndex = index;
       }
     },
-    backTop() {
-      this.$refs.scroll.scrollTo(0, 0, 500);
-    },
     contentScroll(position) {
       this.posY = -position.y;
       //1 判断backtop是否显示
       this.isBack = this.posY > 500;
       // 2决定tabcontrol是否吸顶
-      this.isTabFixed = this.posY > this.tabOffsetTop;
+      this.showBackTop()
     },
     loadMore() {
       this.getHomeGoods(this.currentType);
