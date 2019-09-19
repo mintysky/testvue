@@ -32,7 +32,7 @@ export const backTopMixin = {
       this.$refs.scroll.scrollTo(0, 0, 500);
     },
     showBackTop() {
-      this.isTabFixed = this.posY > this.tabOffsetTop;
+      this.isBack = this.posY > 500;
     }
   }
 }

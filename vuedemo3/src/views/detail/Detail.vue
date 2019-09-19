@@ -1,8 +1,8 @@
 <template>
   <div id="detail" class="detail">
     <detail-nav-bar @titleClick="titleClick" ref="nav"></detail-nav-bar>
-    <Scroll class="detail-content" ref="scroll" :probe-type="3"
-    @scroll="detailScroll">
+    <Scroll class="detail-content" ref="scroll" :probe-type="3" @scroll="detailScroll">
+      <!-- <div>{{$store.state.cartList}}</div> -->
       <detail-swiper :top-img="topImg"></detail-swiper>
       <detail-base-info :goods="goodsInfo"></detail-base-info>
       <detail-shop-info :shop="shopInfo"></detail-shop-info>
@@ -11,9 +11,8 @@
       <detail-rate ref="rate" :rate="rate"></detail-rate>
       <goods-list ref="recommend" :goods="recommend"></goods-list>
     </Scroll>
-    <detail-bottom-bar>
-
-    </detail-bottom-bar>
+    <back-top @click.native="backTop" v-show="isBack"></back-top>
+    <detail-bottom-bar @addToCart = "addToCart"></detail-bottom-bar>
   </div>
 </template>
 
@@ -25,17 +24,19 @@ import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailItemInfo from "./childComps/DetailItemInfo";
 import DetailParams from "./childComps/DetailParams";
 import DetailRate from "./childComps/DetailRate";
-import DetailBottomBar from "./childComps/DetailBottomBar"
+import DetailBottomBar from "./childComps/DetailBottomBar";
 
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
 import { debounce } from "common/utils";
 
-import { itemListenerMixin } from "common/mixin";
+import { itemListenerMixin, backTopMixin } from "common/mixin";
 class Goods {
   constructor(itemInfo, cols, service) {
     this.title = itemInfo.title;
+    this.desc = itemInfo.desc;
     this.price = itemInfo.price;
+    this.lowNowPrice = itemInfo.lowNowPrice;
     this.oldPrice = itemInfo.oldPrice;
     this.discount = itemInfo.discountDesc;
     this.cols = cols;
@@ -57,7 +58,8 @@ export default {
       recommend: [],
       topY: [],
       getTopY: null,
-      currentIndex:0
+      currentIndex: 0,
+      posY: 0
     };
   },
   components: {
@@ -72,7 +74,7 @@ export default {
     Scroll,
     DetailBottomBar
   },
-   mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   created() {
     // 获取iid
     this.iid = this.$route.params.id;
@@ -87,29 +89,44 @@ export default {
       this.topY.push(this.$refs.rate.$el.offsetTop);
       this.topY.push(this.$refs.recommend.$el.offsetTop);
       this.topY.push(Number.MAX_VALUE);
-      console.log(this.topY);
-    },100);
+      // console.log(this.topY);
+    }, 100);
   },
-  updated() {
+  updated() {},
 
-  },
- 
   destroyed() {
     this.$bus.$off("itemImgLoad", this.itemListener);
   },
   methods: {
-    detailScroll(position){
+    addToCart(){
+      // 获取购物车需要展示的信息
+      const product = {}
+      product.iid = this.iid;
+      product.image = this.topImg[0];
+      product.title = this.goodsInfo.title;
+      product.desc = this.goodsInfo.desc;
+      product.price = this.goodsInfo.lowNowPrice;
+
+      // console.log(product);
+      //将商品加入到购物车
+      this.$store.dispatch('addCart',product)
+    },
+    detailScroll(position) {
       // console.log(position);
-      const posY = -position.y;
+      this.posY = -position.y;
       const l = this.topY.length - 1;
-      for( let i =0; i<l;i++ ){
-        if(this.currentIndex !== i && (posY >=this.topY [i] && posY < this.topY[i+1])){
-            console.log(i);
-            this.currentIndex = i;
-            this.$refs.nav.currentIndex = this.currentIndex;
+      for (let i = 0; i < l; i++) {
+        if (
+          this.currentIndex !== i &&
+          (this.posY >= this.topY[i] && this.posY < this.topY[i + 1])
+        ) {
+          // console.log(i);
+          this.currentIndex = i;
+          this.$refs.nav.currentIndex = this.currentIndex;
         }
       }
-
+      // console.log(this.posY);
+      this.showBackTop();
     },
     titleClick(index) {
       // console.log(index);
@@ -137,8 +154,6 @@ export default {
           this.rate = data.rate.list[0];
         }
         // console.log(this.paramInfo);
-
-     
       });
     },
     getRecommend() {

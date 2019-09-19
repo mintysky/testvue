@@ -43,7 +43,7 @@ import { clearTimeout, setTimeout } from "timers";
 
 // import { debounce } from "common/utils";
 // import { close } from "fs";
-import { itemListenerMixin } from "common/mixin";
+import { itemListenerMixin, backTopMixin } from "common/mixin";
 
 export default {
   name: "Home",
@@ -104,7 +104,7 @@ export default {
     // }
     // this.$bus.$on("itemImgLoad", this.itemListener );
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin,backTopMixin],
   activated() {
     this.$refs.scroll.scrollTo(0, this.saveY, 0);
     this.$refs.scroll.refresh();
@@ -140,9 +140,9 @@ export default {
     },
     contentScroll(position) {
       this.posY = -position.y;
-      //1 判断backtop是否显示
-      this.isBack = this.posY > 500;
-      // 2决定tabcontrol是否吸顶
+      // 1决定tabcontrol是否吸顶
+      this.isTabFixed = this.posY > this.tabOffsetTop;
+      //2 判断backtop是否显示
       this.showBackTop()
     },
     loadMore() {

@@ -14,7 +14,7 @@ export default {
 <style lang="scss">
 .back-top {
   position: fixed;
-  bottom: 50px;
+  bottom: 60px;
   right: 10px;
   z-index: 10;
   img {

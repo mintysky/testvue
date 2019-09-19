@@ -35,7 +35,8 @@ export default {
   watch: {},
   methods: {
     addToCart(){
-
+      // 点击添加到购物车
+      this.$emit("addToCart")
     }
   }
 };
