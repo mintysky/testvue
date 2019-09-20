@@ -46,6 +46,7 @@ export default {
     },
     backClick() {
       this.$router.back();
+      this.$destroy(true)
     }
   }
 };

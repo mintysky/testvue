@@ -12,7 +12,7 @@
       <goods-list ref="recommend" :goods="recommend"></goods-list>
     </Scroll>
     <back-top @click.native="backTop" v-show="isBack"></back-top>
-    <detail-bottom-bar @addToCart = "addToCart"></detail-bottom-bar>
+    <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
   </div>
 </template>
 
@@ -45,6 +45,7 @@ class Goods {
 }
 
 export default {
+  name:"Detail",
   props: {},
   data() {
     return {
@@ -78,6 +79,7 @@ export default {
   created() {
     // 获取iid
     this.iid = this.$route.params.id;
+    // console.log("creat");
     // 请求详情页数据
     this.getGoodDetail();
     // 请求推荐数据
@@ -92,15 +94,14 @@ export default {
       // console.log(this.topY);
     }, 100);
   },
-  updated() {},
-
   destroyed() {
+    this.$destroy(true);
     this.$bus.$off("itemImgLoad", this.itemListener);
   },
   methods: {
-    addToCart(){
+    addToCart() {
       // 获取购物车需要展示的信息
-      const product = {}
+      const product = {};
       product.iid = this.iid;
       product.image = this.topImg[0];
       product.title = this.goodsInfo.title;
@@ -109,7 +110,7 @@ export default {
 
       // console.log(product);
       //将商品加入到购物车
-      this.$store.dispatch('addCart',product)
+      this.$store.dispatch("addCart", product);
     },
     detailScroll(position) {
       // console.log(position);
