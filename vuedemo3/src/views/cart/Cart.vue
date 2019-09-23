@@ -9,13 +9,12 @@
     </scroll>
     <!-- 底部汇总 -->
     <cart-bottom-tab></cart-bottom-tab>
-
   </div>
 </template>
 <script>
 import NavBar from "components/common/navbar/NavBar";
 import CartItem from "./childcomps/CartItem";
-import CartBottomTab from "./childcomps/CartBottomTab"
+import CartBottomTab from "./childcomps/CartBottomTab";
 
 import { backTopMixin } from "common/mixin";
 import Scroll from "components/common/scroll/Scroll";
@@ -35,8 +34,8 @@ export default {
   components: {
     NavBar,
     CartItem,
-    CartBottomTab,
-    Scroll
+    Scroll,
+    CartBottomTab
   },
   activated() {
     this.$refs.scroll.refresh();

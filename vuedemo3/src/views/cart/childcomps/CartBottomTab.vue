@@ -5,13 +5,14 @@
         <check-button @click.native="checkChange()" :is-checked="allCheck"></check-button>
         <span>全选</span>
       </div>
-      <div class="account">
+      <div class="account" >
         <p class="sum">
           合计：
-          <span class="sum-num">￥{{111}}</span>
+          <span class="sum-num">￥{{sum}}</span>
         </p>
         <p class="count">
-          共<span class="count-num">{{5}}</span>件商品
+          共
+          <span class="count-num">{{count}}</span>件商品
         </p>
       </div>
     </div>
@@ -21,6 +22,7 @@
 
 <script>
 import CheckButton from "components/content/checkbutton/CheckButton";
+import { mapGetters } from "vuex"
 export default {
   name: "CartBottomTab",
   props: {},
@@ -33,11 +35,21 @@ export default {
     CheckButton
   },
   computed: {
-    "sum":function(){
-
+    ...mapGetters(['cartList']),
+    sum: function() {
+      return this.cartList.filter(item => {
+        return item.checked
+      }).reduce((total,item) => {
+        console.log(total);
+        return total + item.price*item.count
+      },0).toFixed(2);
     },
-    "count":function(){
-
+    count: function() {
+       return this.cartList.filter(item => {
+        return item.checked
+      }).reduce((total,item) => {
+        return total + item.count
+      },0)
     }
   },
   created() {},
@@ -46,10 +58,10 @@ export default {
   methods: {
     checkChange() {
       this.allCheck = !this.allCheck;
-    }
-  },
-  payClick(){
-console.log('aaa');
+    },
+     payClick() {
+    console.log("aaa");
+  }
   }
 };
 </script>
