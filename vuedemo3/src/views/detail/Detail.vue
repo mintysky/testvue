@@ -31,6 +31,7 @@ import GoodsList from "components/content/goods/GoodsList";
 import { debounce } from "common/utils";
 
 import { itemListenerMixin, backTopMixin } from "common/mixin";
+import { mapActions } from "vuex"
 class Goods {
   constructor(itemInfo, cols, service) {
     this.title = itemInfo.title;
@@ -60,7 +61,8 @@ export default {
       topY: [],
       getTopY: null,
       currentIndex: 0,
-      posY: 0
+      posY: 0,
+     
     };
   },
   components: {
@@ -73,7 +75,8 @@ export default {
     DetailRate,
     GoodsList,
     Scroll,
-    DetailBottomBar
+    DetailBottomBar,
+  
   },
   mixins: [itemListenerMixin, backTopMixin],
   created() {
@@ -99,6 +102,7 @@ export default {
     this.$bus.$off("itemImgLoad", this.itemListener);
   },
   methods: {
+    ...mapActions(['addCart']),
     addToCart() {
       // 获取购物车需要展示的信息
       const product = {};
@@ -110,7 +114,10 @@ export default {
 
       // console.log(product);
       //将商品加入到购物车
-      this.$store.dispatch("addCart", product);
+      this.addCart(product).then(res => {
+        console.log(this.$toast);
+        this.$toast.show(res,1500);        
+      }).catch(() =>{ console.log('promise catch err');});
     },
     detailScroll(position) {
       // console.log(position);

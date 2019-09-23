@@ -195,7 +195,7 @@ export default {
 }
 .home-content {
   position: absolute;
-  top: 44px;
+  top: 43px;
   bottom: 49px;
   left: 0;
   right: 0;

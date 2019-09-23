@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-bar">
+  <div class="bottom-bar ignore">
     <div class="bar-item bar-left">
       <div>
         <i class="icon service"></i>

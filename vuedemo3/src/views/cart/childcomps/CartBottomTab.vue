@@ -2,10 +2,10 @@
   <div class="cart-bottom">
     <div class="bottom-left">
       <div class="check-area">
-        <check-button @click.native="checkChange()" :is-checked="allCheck"></check-button>
+        <check-button @click.native="checkChange()" :is-checked="isSelectAll"></check-button>
         <span>全选</span>
       </div>
-      <div class="account" >
+      <div class="account">
         <p class="sum">
           合计：
           <span class="sum-num">￥{{sum}}</span>
@@ -22,34 +22,41 @@
 
 <script>
 import CheckButton from "components/content/checkbutton/CheckButton";
-import { mapGetters } from "vuex"
+import { mapGetters } from "vuex";
 export default {
   name: "CartBottomTab",
   props: {},
   data() {
-    return {
-      allCheck: false
-    };
+    return {};
   },
   components: {
     CheckButton
   },
   computed: {
-    ...mapGetters(['cartList']),
+    ...mapGetters(["cartList"]),
     sum: function() {
-      return this.cartList.filter(item => {
-        return item.checked
-      }).reduce((total,item) => {
-        console.log(total);
-        return total + item.price*item.count
-      },0).toFixed(2);
+      return this.cartList
+        .filter(item => {
+          return item.checked;
+        })
+        .reduce((total, item) => {
+          // console.log(total);
+          return total + item.price * item.count;
+        }, 0)
+        .toFixed(2);
     },
     count: function() {
-       return this.cartList.filter(item => {
-        return item.checked
-      }).reduce((total,item) => {
-        return total + item.count
-      },0)
+      return this.cartList
+        .filter(item => {
+          return item.checked;
+        })
+        .reduce((total, item) => {
+          return total + item.count;
+        }, 0);
+    },
+    isSelectAll() {
+      if (this.cartList.length === 0) return false;
+      return !this.cartList.some(item => !item.checked);
     }
   },
   created() {},
@@ -57,11 +64,22 @@ export default {
   watch: {},
   methods: {
     checkChange() {
-      this.allCheck = !this.allCheck;
+      // 条件必须在外面
+        if (this.isSelectAll) {
+          this.cartList.forEach(item => {
+          item.checked = false;})
+        } else {
+            this.cartList.forEach(item => {
+          item.checked = true;
+        })
+      }
     },
-     payClick() {
-    console.log("aaa");
-  }
+    payClick() {
+      console.log(this.$toast);
+      if(!this.isSelectAll){
+        this.$toast.show('请选择商品',2000);
+      }
+    }
   }
 };
 </script>
