@@ -19,7 +19,7 @@ export default {
     };
   },
   methods: {
-    show(msg, duration=2000) {
+    show(msg, duration) {
       this.isShow = true;
       this.msg = msg;
       setTimeout(() => {

@@ -14,8 +14,8 @@ import toast from "components/common/toast"
 Vue.use(toast);
 
 // 解决移动端300ms延迟
-// import FastClick from "fastclick"
-// FastClick.attch(document.body)
+import FastClick from "fastclick"
+FastClick.attach(document.body)
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'

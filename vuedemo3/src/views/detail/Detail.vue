@@ -116,6 +116,7 @@ export default {
       //将商品加入到购物车
       this.addCart(product).then(res => {
         console.log(this.$toast);
+        console.log(res);
         this.$toast.show(res,1500);        
       }).catch(() =>{ console.log('promise catch err');});
     },

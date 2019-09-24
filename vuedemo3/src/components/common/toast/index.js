@@ -1,6 +1,6 @@
 import Toast from "./Toast.vue";
-const toast = {}
-toast.install = function (Vue) {
+const obj = {}
+obj.install = function (Vue) {
   // 创建组件构造器
   const toastConstrutor = Vue.extend(Toast)
   //创建组件对象
@@ -9,8 +9,8 @@ toast.install = function (Vue) {
   toast.$mount(document.createElement('div'))
   // toast.$el对应就是div
   document.body.appendChild(toast.$el)
-  Vue.prototype.$toast = Toast;
+  Vue.prototype.$toast = toast;
 
 }
 
-export default toast
+export default obj
